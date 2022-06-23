@@ -29,7 +29,7 @@ def main():
         pass
     elif gs.check == True:
         p.init()
-        
+
         screen = p.display.set_mode((LARGURA, ALTURA))
         clock = p.time.Clock()
         screen.fill(p.Color('white'))
@@ -38,10 +38,9 @@ def main():
         validMoves = gs.getValidMoves()
         animate = False
         loadimages()
-        verify = gs.check
         player1 = gs.playerOne
         player2 = gs.playerTwo
-    
+
         while gs.running:
             humanTurn = (gs.whiteToMove and player1) or (not gs.whiteToMove and     player2)
             for e in p.event.get():
@@ -59,7 +58,7 @@ def main():
                         else:
                             gs.sqSelected = (row, col)
                             gs.playerClicks.append(gs.sqSelected)
-    
+
                         if len(gs.playerClicks) == 2: #DEPOIS DO 2º CLICK
                             move = ChessEngine.Moves(gs.playerClicks[0], gs.    playerClicks[1], gs.board)
                             for i in range(len(validMoves)):
@@ -85,7 +84,7 @@ def main():
                         gs.moveMade = False
                         animate = False
                         gs.gameOver = False
-    
+
                     if e.key == p.K_t:
                         gs.running = False
                         gs.gameOver = True
@@ -95,8 +94,8 @@ def main():
                     if e.key == p.K_ESCAPE:
                         gs.running = False
                         p.quit()
-    
-    
+
+
             # IA MOVE FINDER
             if not gs.gameOver and not humanTurn:
                 IAMove = ChessIA.findBestMove(gs, validMoves)
@@ -105,24 +104,24 @@ def main():
                 gs.MakeMoves(IAMove)
                 gs.moveMade = True
                 animate = True
-    
+
             if gs.moveMade:
                 if animate:
                     animateMove(gs.moveLog[-1], screen, gs.board, clock)
                 validMoves = gs.getValidMoves()
                 gs.moveMade = False
                 animate = False
-    
+
             drawGameState(screen, gs, validMoves, gs.sqSelected, gs.TelaMenu)
-    
+
             if gs.checkmate:
                 gs.gameOver = True
                 if gs.whiteToMove:
                     drawText(screen, "Negras ganharam por Xeque-Mate", "Pressione T     para voltar ao menu", "Pressione R para reiniciar", "Pressione  ESC para sair")
-    
+
                 else:
                     drawText(screen, "Brancas ganharam por Xeque-Mate", "Pressione  T para voltar ao menu", "Pressione R para reiniciar",    "Pressione ESC para sair")
-    
+
             elif gs.stalemate:
                 gs.gameOver = True
                 if gs.whiteToMove:
