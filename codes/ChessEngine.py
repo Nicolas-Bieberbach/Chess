@@ -29,19 +29,19 @@ class GameState():
         self.checkmate = False
         self.stalemate = False
         self.running = True
-        self.playerOne = [(self.TelaMenu)]
-        self.playerTwo = [(self.TelaMenu)]
+        self.playerOne = [(self.Menu)]
+        self.playerTwo = [(self.Menu)]
         self.gameOver = False
         self.moveMade = False
         self.sqSelected = ()
-        self.check = [(self.TelaMenu)]
+        self.check = [(self.Menu)]
         self.playerClicks = []
         self.enPassantPossible = () # COORDENADAS DO QUADRADO ONDE ENPASSANT É POSSIVEL
         self.enPassantPossibleLog = [self.enPassantPossible]
         self.currentCastlingRight = CastleRights(True, True, True, True)
         self.castleRightsLog = [CastleRights(self.currentCastlingRight.wks, self.currentCastlingRight.bks,
                                              self.currentCastlingRight.wqs, self.currentCastlingRight.bqs)]
-    def TelaMenu(self):
+    def Menu(self):
         self.check = True
         self.gameOver = True
         self.running = False
@@ -95,7 +95,7 @@ class GameState():
             self.playerTwo = False
             tela.destroy()
 
-        def Sair(event):
+        def Exit(event):
             result = messagebox.askquestion('VERIFICAR: ', 'Deseja realmente sair?')
             if result == 'yes':
                 self.check = False
@@ -119,11 +119,11 @@ class GameState():
                       bg='burlywood', fg='black', relief=RAISED, overrelief=RIDGE)
         cvsc.place(x=130, y=350)
 
-        sair = Button(tela, text='SAIR DO JOGO', command=lambda:Sair(event='<Escape>'), width=18, height=1, bd=4, font=('algerian 14 bold'),
+        sair = Button(tela, text='SAIR DO JOGO', command=lambda:Exit(event='<Escape>'), width=18, height=1, bd=4, font=('algerian 14 bold'),
                       bg='firebrick', fg='black', relief=RAISED, overrelief=RIDGE)
         sair.place(x=130, y=450)
         
-        tela.bind('<Escape>', Sair)
+        tela.bind('<Escape>', Exit)
         tela.mainloop()
 
 

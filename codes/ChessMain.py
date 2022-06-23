@@ -24,7 +24,7 @@ def loadimages():
 # RESPONSAVEL POR FAZER O JOGO RODAR
 def main():
     gs = ChessEngine.GameState()
-    gs.TelaMenu()
+    gs.Menu()
     if gs.check == False:
         pass
     elif gs.check == True:
