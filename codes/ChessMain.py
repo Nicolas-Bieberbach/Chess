@@ -112,7 +112,7 @@ def main():
                 gs.moveMade = False
                 animate = False
 
-            drawGameState(screen, gs, validMoves, gs.sqSelected, gs.TelaMenu)
+            drawGameState(screen, gs, validMoves, gs.sqSelected, gs.Menu)
 
             if gs.checkmate:
                 gs.gameOver = True
@@ -152,7 +152,7 @@ def highlightSquares(screen, gs, validMoves, sqSelected):
 
 
 # RESPONSÁVEL PELOS GRÁFICOS DO JOGO
-def drawGameState(screen, gs, validMoves, sqSelected, TelaMenu):
+def drawGameState(screen, gs, validMoves, sqSelected, Menu):
     drawBoard(screen)
     highlightSquares(screen, gs, validMoves, gs.sqSelected)
     drawPieces(screen, gs.board)

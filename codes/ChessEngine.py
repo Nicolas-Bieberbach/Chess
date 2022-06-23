@@ -4,10 +4,6 @@ from tkinter import *
 from tkinter import messagebox
 import pygame as p
 
-
-
-
-
 class GameState():
     def __init__(self):
          #TABULEIRO 8X8 CADA ELEMENTO POSSUI 2 CARACTERES
@@ -126,8 +122,6 @@ class GameState():
         tela.bind('<Escape>', Exit)
         tela.mainloop()
 
-
-
     def MakeMoves(self, move):
         self.board[move.startRow][move.startCol] = '--'
         self.board[move.endRow][move.endCol] = move.pieceMoved
@@ -143,24 +137,22 @@ class GameState():
         if move.pawnPromotion:
             self.board[move.endRow][move.endCol] = move.pieceMoved[0] + 'Q'
 
-
         # ENPASSANT
         if move.enPassantMove:
             self.board[move.startRow][move.endCol] = '--' # CAPTURA O PEÃO
-
 
         # ATUALIZAR A VARIAVEL enPassantPossible
         if move.pieceMoved[1] == 'p' and abs(move.startRow - move.endRow) == 2: # SOMENTE NO 2º QUADRADO QUE O PEÃO AVANÇAR
             self.enPassantPossible = ((move.startRow + move.endRow) // 2, move.startCol)
 
         else:
-
             self.enPassantPossible = ()
 
         if move.CastleMoves:
             if move.endCol - move.startCol == 2: # CASTLING DO LADO DO REI
                 self.board[move.endRow][move.endCol-1] = self.board[move.endRow][move.endCol+1] #MOVE A TORRE
                 self.board[move.endRow][move.endCol+1] = '--'
+
             else: # CASTLING DO LADO DA RAINHA
                 self.board[move.endRow][move.endCol+1] = self.board[move.endRow][move.endCol-2] #MOVE A TORRE
                 self.board[move.endRow][move.endCol-2] = '--'
@@ -170,9 +162,6 @@ class GameState():
         self.updateCastleRights(move)
         self.castleRightsLog.append(CastleRights(self.currentCastlingRight.wks, self.currentCastlingRight.bks,
                                                      self.currentCastlingRight.wqs, self.currentCastlingRight.bqs))
-
-
-
 # DESFAZER OS MOVIMENTOS
     def undoMoves(self):
         if len(self.moveLog) != 0: # CONFIRMAR SE TEM UM MOVIMENTO PARA DESFAZER
@@ -190,10 +179,8 @@ class GameState():
                 self.board[move.endRow][move.endCol] = '--'
                 self.board[move.startRow][move.endCol] = move.pieceCaptured
 
-
             self.enPassantPossibleLog.pop()
             self.enPassantPossible = self.enPassantPossibleLog[-1]
-
 
             self.castleRightsLog.pop()
             CastleRights = self.castleRightsLog[-1]
@@ -292,8 +279,6 @@ class GameState():
                 return True
         return False
 
-
-
 # TODOS OS MOVIMENTOS MENOS XEQUE
     def getAllPossibleMoves(self):
         moves = []
@@ -303,38 +288,29 @@ class GameState():
                 if (turn == 'w' and self.whiteToMove) or (turn == 'b' and not self.whiteToMove):
                     piece = self.board[r][c][1]
                     self.moveFunctions[piece](r, c, moves) # CHAMA A FUNÇÃO DE MOVIMENTO APROPRIADA PARA O TIPO DE PEÇA
-
         return moves
 
 # MOVIMENTOS DOS PEÕES
     def getPawnMoves(self, r, c, moves):
         if self.whiteToMove: # MOVIMENTO DOS PEÕES BRANCOS
-
             if self.board[r-1][c] == '--':  #PEÃO AVANÇA 1 CASA
-
                 moves.append(Moves((r, c), (r - 1, c), self.board))
 
                 if r == 6 and self.board[r-2][c] == '--': # PEÃO AVANÇA 2 CASAS
-
                     moves.append(Moves((r, c), (r - 2, c), self.board))
 
             if c - 1 >= 0:   #CAPTURAS PARA A ESQUERDA
-
                 if self.board[r-1][c-1][0] == 'b': #PEÇA INIMIGA PARA CAPTURAR
-
                     moves.append(Moves((r, c), (r - 1, c - 1), self.board))
 
                 elif (r - 1, c - 1) == self.enPassantPossible:
                     moves.append(Moves((r, c), (r - 1, c - 1), self.board, enPassantMove=True))
 
             if c + 1 <= 7:   #CAPTURAS PARA A DIREITA
-
                 if self.board[r-1][c+1][0] == 'b': #PEÇA INIMIGA PARA CAPTURAR
-
                     moves.append(Moves((r, c), (r - 1, c + 1), self.board))
 
                 elif (r - 1, c + 1) == self.enPassantPossible:
-
                     moves.append(Moves((r, c), (r - 1, c + 1), self.board, enPassantMove=True))
         else:
             # MOVIMENTOS DOS PEÕES PRETOS
@@ -344,22 +320,17 @@ class GameState():
                     moves.append(Moves((r, c), (r + 2, c), self.board))
 
             if c - 1 >= 0:  # CAPTURAS PARA A ESQUERDA
-
                 if self.board[r + 1][c - 1][0] == 'w':  # PEÇA INIMIGA PARA CAPTURAR
-
                     moves.append(Moves((r, c), (r + 1, c - 1), self.board))
 
                 elif (r + 1, c - 1) == self.enPassantPossible:
-
                     moves.append(Moves((r, c), (r + 1, c - 1), self.board, enPassantMove=True))
+
             if c + 1 <= 7:  # CAPTURAS PARA A DIREITA
-
                 if self.board[r + 1][c + 1][0] == 'w':  # PEÇA INIMIGA PARA CAPTURAR
-
                     moves.append(Moves((r, c), (r + 1, c + 1), self.board))
 
                 elif (r + 1, c + 1) == self.enPassantPossible:
-
                     moves.append(Moves((r, c), (r + 1, c + 1), self.board, enPassantMove=True))
 
 # MOVIMENTOS DAS TORRES
@@ -367,22 +338,14 @@ class GameState():
         directions = ((-1, 0), (0, -1), (1, 0), (0, 1))  # CIMA, BAIXO, ESQUERDA DIREITA
         enemyColor = 'b' if self.whiteToMove else 'w'
         for d in directions:
-
             for i in range(1, 8):  # MÁXIMO DE 7 CASAS
-
                 endRow = r + d[0] * i
                 endCol = c + d[1] * i
-
                 if 0 <= endRow < 8 and 0 <= endCol < 8:  # CONDIÇÃO PARA VERIFICAR O TABULEIRO
-
                     endPiece = self.board[endRow][endCol]
-
                     if endPiece == '--':  # ESPAÇO VAZIO (VÁLIDO)
-
                         moves.append(Moves((r, c), (endRow, endCol), self.board))
-
                     elif endPiece[0] == enemyColor:  # PEÇA INIMIGA (VÁLIDO)
-
                         moves.append(Moves((r, c), (endRow, endCol), self.board))
                         break
 
@@ -396,41 +359,28 @@ class GameState():
     def getKnightMoves(self, r, c, moves):
         knightMoves = ((-2, -1), (-2, 1), (-1, -2), (-1, 2), (1, -2), (1, 2), (2, -1), (2, 1))
         allyColor = 'w' if self.whiteToMove else 'b'
-
         for m in knightMoves:
-
             endRow = r + m[0]
             endCol = c + m[1]
-
             if 0 <= endRow < 8 and 0 <= endCol < 8:
-
                 endPiece = self.board[endRow][endCol]
-
                 if endPiece[0] != allyColor:  # ESPAÇO VAZIO OU PEÇA INIMIGA
-
                     moves.append(Moves((r, c), (endRow, endCol), self.board))
+
 #MOVIMENTO DOS BISPOS
     def getBishopMoves(self, r, c, moves):
         directions = ((-1, -1), (-1, 1), (1, -1), (1, 1))  # 4 DIAGONAIS
         enemyColor = 'b' if self.whiteToMove else 'w'
 
         for d in directions:
-
             for i in range(1, 8):  # MÁXIMO DE 7 CASAS
-
                 endRow = r + d[0] * i
                 endCol = c + d[1] * i
-
                 if 0 <= endRow < 8 and 0 <= endCol < 8:
-
                     endPiece = self.board[endRow][endCol]
-
                     if endPiece == '--':  # ESPAÇO VAZIO (VÁLIDO)
-
                         moves.append(Moves((r, c), (endRow, endCol), self.board))
-
                     elif endPiece[0] == enemyColor:  # PEÇA INIMIGA (VÁLIDO)
-
                         moves.append(Moves((r, c), (endRow, endCol), self.board))
                         break
 
@@ -449,20 +399,13 @@ class GameState():
     def getKingMoves(self, r, c, moves):
         kingMoves = ((-1, -1), (-1, 0), (-1, 1), (0, -1), (0, 1), (1, -1), (1, 0), (1, 1))
         allyColor = 'w' if self.whiteToMove else 'b'
-
         for i in range(8):
-
             endRow = r + kingMoves[i][0]
             endCol = c + kingMoves[i][1]
-
             if 0 <= endRow < 8 and 0 <= endCol < 8:
-
                 endPiece = self.board[endRow][endCol]
-
                 if endPiece[0] != allyColor:  # SE FOR UM ESPAÇO VAZIO OU PEÇA INIMIGA
-
                     moves.append(Moves((r, c), (endRow, endCol), self.board))
-
 
     def getCastleMoves(self, r, c, moves):
         if self.squareUnderAttack(r, c):
@@ -477,12 +420,10 @@ class GameState():
             if not self.squareUnderAttack(r, c + 1) and not self.squareUnderAttack(r, c + 2):
                 moves.append(Moves((r, c), (r, c + 2), self.board, CastleMoves=True))
 
-
     def getQueensideCastleMoves(self, r, c, moves):
         if self.board[r][c - 1] == '--' and self.board[r][c - 2] == '--' and self.board[r][c - 3] == '--':
             if not self.squareUnderAttack(r, c - 1) and not self.squareUnderAttack(r, c - 2):
                 moves.append(Moves((r, c), (r, c - 2), self.board, CastleMoves=True))
-
 
 class CastleRights():
     def __init__(self, wks, bks, wqs, bqs):
@@ -492,9 +433,6 @@ class CastleRights():
         self.bqs = bqs
 # DEFINIR OS MOVIMENTOS E AS CAPTURAS DE PEÇAS
 class Moves():
-        # maps keys to value
-        # key : value
-
         ranksToRows = {'1': 7, '2': 6, '3': 5, '4': 4,
                       '5': 3, '6': 2, '7': 1, '8': 0}
         rowsToRanks = {v: k for k, v in ranksToRows.items()}
@@ -520,11 +458,8 @@ class Moves():
                 return self.moveID == other.moveID
             return False
 
-
-
         def GetChessNotation(self):
             return self.GetRankFile(self.startRow, self.startCol) + self.GetRankFile(self.endRow, self.endCol)
-
 
         def GetRankFile(self, r, c):
 
